@@ -1,5 +1,6 @@
-import { useState } from "react"
-import { type Order, ordersData } from "../services/ordersData"
+import { useEffect, useState } from "react"
+import { type Order } from "../services/ordersData"
+import { fetchOrders } from "../services/ordersApi"
 
 const statusStyles = {
   Completed: "text-green-400",
@@ -8,22 +9,38 @@ const statusStyles = {
 }
 
 const OrdersTable = () => {
+  const [orders, setOrders] = useState<Order[]>([])
   const [filter, setFilter] = useState<"All" | Order["status"]>("All")
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchOrders()
+      .then(setOrders)
+      .finally(() => setLoading(false))
+  }, [])
 
   const filteredOrders =
     filter === "All"
-      ? ordersData
-      : ordersData.filter(order => order.status === filter)
+      ? orders
+      : orders.filter(order => order.status === filter)
+
+  if (loading) {
+    return (
+      <div className="bg-slate-800 p-6 rounded-xl">
+        Loading orders...
+      </div>
+    )
+  }
 
   return (
     <div className="bg-slate-800 p-6 rounded-xl">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex justify-between mb-4">
         <h3 className="text-lg font-semibold">Recent Orders</h3>
 
         <select
           value={filter}
           onChange={e => setFilter(e.target.value as any)}
-          className="bg-slate-700 text-white px-3 py-1 rounded-md"
+          className="bg-slate-700 px-3 py-1 rounded"
         >
           <option value="All">All</option>
           <option value="Completed">Completed</option>
@@ -32,31 +49,22 @@ const OrdersTable = () => {
         </select>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-slate-400 border-b border-slate-700">
-              <th className="text-left py-2">Customer</th>
-              <th className="text-left py-2">Status</th>
-              <th className="text-right py-2">Amount</th>
-              <th className="text-right py-2">Date</th>
+      <table className="w-full text-sm">
+        <tbody>
+          {filteredOrders.map(order => (
+            <tr key={order.id} className="border-b border-slate-700">
+              <td>{order.customer}</td>
+              <td className={statusStyles[order.status]}>
+                {order.status}
+              </td>
+              <td className="text-right">${order.amount}</td>
+              <td className="text-right text-slate-400">
+                {order.date}
+              </td>
             </tr>
-          </thead>
-
-          <tbody>
-            {filteredOrders.map(order => (
-              <tr key={order.id} className="border-b border-slate-700 last:border-0">
-                <td className="py-2">{order.customer}</td>
-                <td className={`py-2 ${statusStyles[order.status]}`}>
-                  {order.status}
-                </td>
-                <td className="py-2 text-right">${order.amount}</td>
-                <td className="py-2 text-right text-slate-400">{order.date}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
