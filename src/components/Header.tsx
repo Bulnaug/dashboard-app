@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom"
+import { signOut } from "../services/authApi"
 
 const Header = () => {
   const location = useLocation()
@@ -20,6 +21,12 @@ const Header = () => {
           A
         </div>
       </div>
+      <button
+        onClick={signOut}
+        className="text-sm text-slate-400 hover:text-white"
+        >
+        Logout
+      </button>
     </header>
   )
 }

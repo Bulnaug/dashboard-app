@@ -19,3 +19,8 @@ https://dashboard-app-two-gules.vercel.app/
 - Interaktive Diagramme (Linien- und Kreisdiagramme)
 - Datentabelle mit Filterfunktion
 - Echtes Backend mit Supabase
+
+
+## 🔑 Login
+- Email: admin@mail.com
+- Password: admin

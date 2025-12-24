@@ -1,4 +1,4 @@
-export const revenueData = [
+ export const revenueData = [
   { month: "Jan", revenue: 12000 },
   { month: "Feb", revenue: 15000 },
   { month: "Mar", revenue: 18000 },
