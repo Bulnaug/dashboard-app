@@ -35,17 +35,17 @@ const OrdersTable = () => {
   return (
     <div className="bg-slate-800 p-6 rounded-xl">
       <div className="flex justify-between mb-4">
-        <h3 className="text-lg font-semibold">Recent Orders</h3>
+        <h3 className="text-lg font-semibold">Aktuelle Bestellungen</h3>
 
         <select
           value={filter}
           onChange={e => setFilter(e.target.value as any)}
           className="bg-slate-700 px-3 py-1 rounded"
         >
-          <option value="All">All</option>
-          <option value="Completed">Completed</option>
-          <option value="Pending">Pending</option>
-          <option value="Cancelled">Cancelled</option>
+          <option value="All">Alle</option>
+          <option value="Completed">Abgeschlossen</option>
+          <option value="Pending">Anhängig</option>
+          <option value="Cancelled">Storniert</option>
         </select>
       </div>
 
