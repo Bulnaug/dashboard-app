@@ -42,7 +42,7 @@ const UsersPieChart = () => {
           <Pie
             data={data}
             dataKey="count"
-            nameKey="role"
+            nameKey="plan"
             outerRadius={100}
             label
           >

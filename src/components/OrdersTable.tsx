@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from "react"
 import { fetchOrders } from "../services/ordersApi"
 
+type OrderStatus = "Completed" | "Pending" | "Cancelled"
+
 type Order = {
   id: number
   customer: string
   amount: number
-  status: string
+   status: OrderStatus
   date: number
 }
 

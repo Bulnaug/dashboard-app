@@ -19,6 +19,7 @@ https://dashboard-app-two-gules.vercel.app/
 - Interaktive Diagramme (Linien- und Kreisdiagramme)
 - Datentabelle mit Filterfunktion
 - Echtes Backend mit Supabase
+- Infinity scroll fur Bestellungen
 
 
 ## 🔑 Login

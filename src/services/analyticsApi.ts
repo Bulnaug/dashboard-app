@@ -17,7 +17,7 @@ export const fetchRevenueByMonth = async (): Promise<RevenueByMonth[]> => {
 }
 
 export interface UsersByPlan {
-  role: string
+  plan: string
   count: number
 }
 
