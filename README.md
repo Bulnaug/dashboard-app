@@ -20,7 +20,7 @@ https://dashboard-app-two-gules.vercel.app/
 - Datentabelle mit Filterfunktion
 - Echtes Backend mit Supabase
 - Infinity scroll fur Bestellungen
-
+- Filter und Suche hinzugefugt
 
 ## 🔑 Login
 - Email: admin@mail.com

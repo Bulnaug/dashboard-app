@@ -24,6 +24,9 @@ const OrdersTable = () => {
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
+  const [search, setSearch] = useState("")
+  const [statusFilter, setStatusFilter] = useState("All")
+
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
   const loadOrders = async () => {
@@ -31,7 +34,7 @@ const OrdersTable = () => {
 
     setLoading(true)
 
-    const newOrders = await fetchOrders(page)
+    const newOrders = await fetchOrders(page, search, statusFilter)
 
     if (newOrders.length === 0) {
       setHasMore(false)
@@ -67,10 +70,37 @@ const OrdersTable = () => {
     return () => observer.disconnect()
   }, [loading, hasMore])
 
+  useEffect(() => {
+    setOrders([])
+    setPage(0)
+    setHasMore(true)
+  }, [search, statusFilter])
+
 
   return (
     <div className="bg-slate-800 rounded-xl p-6">
       <h3 className="text-lg font-semibold mb-4">Bestellungen</h3>
+
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <input
+            type="text"
+            placeholder="Kunde suchen..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-slate-700 px-4 py-2 rounded-lg outline-none"
+          />
+
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-slate-700 px-4 py-2 rounded-lg"
+          >
+            <option>All</option>
+            <option>Completed</option>
+            <option>Pending</option>
+            <option>Cancelled</option>
+          </select>
+        </div>
 
       <table className="w-full text-sm">
         <thead>
