@@ -29,22 +29,31 @@ const OrdersTable = () => {
 
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
+  const requestIdRef = useRef(0)
+
   const loadOrders = async () => {
     if (loading || !hasMore) return
 
     setLoading(true)
 
-    const newOrders = await fetchOrders(page, search, statusFilter)
+    const requestId = ++requestIdRef.current
 
-    if (newOrders.length === 0) {
+    const data = await fetchOrders(page, search, statusFilter)
+
+    if (requestId !== requestIdRef.current) return
+
+    if (data.length === 0) {
       setHasMore(false)
     } else {
-      setOrders((prev) => [...prev, ...newOrders])
-      setPage((prev) => prev + 1)
+      setOrders(prev =>
+        page === 0 ? data : [...prev, ...data]
+      )
+      setPage(prev => prev + 1)
     }
 
     setLoading(false)
   }
+
 
   // initial load
   useEffect(() => {
@@ -71,9 +80,12 @@ const OrdersTable = () => {
   }, [loading, hasMore])
 
   useEffect(() => {
+    requestIdRef.current++
     setOrders([])
     setPage(0)
     setHasMore(true)
+    
+    loadOrders()
   }, [search, statusFilter])
 
 
