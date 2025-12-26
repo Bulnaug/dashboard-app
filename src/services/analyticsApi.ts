@@ -31,3 +31,24 @@ export const fetchUsersByPlan = async (): Promise<UsersByPlan[]> => {
 
   return data ?? []
 }
+
+export const getDashboardKPI = async () => {
+  const [ordersResult, revenueResult, usersResult] = await Promise.all([
+    supabase.from("orders").select("id", { count: "exact", head: true }),
+    supabase.from("orders").select("amount"),
+    supabase.from("orders").select("id", { count: "exact", head: true }),
+  ])
+
+  if (ordersResult.error || revenueResult.error || usersResult.error) {
+    throw new Error("Failed to load dashboard KPI")
+  }
+
+  const totalRevenue =
+    revenueResult.data?.reduce((sum, o) => sum + Number(o.amount), 0) ?? 0
+
+  return {
+    orders: ordersResult.count ?? 0,
+    revenue: totalRevenue,
+    users: usersResult.count ?? 0,
+  }
+}

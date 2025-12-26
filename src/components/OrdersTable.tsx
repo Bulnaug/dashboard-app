@@ -75,7 +75,7 @@ const OrdersTable = () => {
       <table className="w-full text-sm">
         <thead>
           <tr className="text-left text-slate-400 border-b border-slate-700">
-            <th className="py-2">ID</th>
+            <th className="py-2">Kunde</th>
             <th className="py-2">Betrag</th>
             <th className="py-2">Status</th>
             <th className="py-2">Datum</th>
