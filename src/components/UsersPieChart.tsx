@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
-import { fetchUsersByPlan, type UsersByPlan } from "../services/analyticsApi"
+import { fetchUsersByPlan } from "../services/analyticsApi"
 
 
 const COLORS = ["#6366f1", "#22c55e", "#f97316"]
