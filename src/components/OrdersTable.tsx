@@ -1,13 +1,14 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, useMemo } from "react"
 import { fetchOrders } from "../services/ordersApi"
 
 type OrderStatus = "Completed" | "Pending" | "Cancelled"
+type StatusFilter = "All" | OrderStatus
 
 type Order = {
   id: number
   customer: string
   amount: number
-   status: OrderStatus
+  status: OrderStatus
   date: number
 }
 
@@ -25,48 +26,62 @@ const OrdersTable = () => {
   const [hasMore, setHasMore] = useState(true)
 
   const [search, setSearch] = useState("")
-  const [statusFilter, setStatusFilter] = useState("All")
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>("All")
 
   const loaderRef = useRef<HTMLDivElement | null>(null)
 
   const requestIdRef = useRef(0)
 
-  const loadOrders = async () => {
-    if (loading || !hasMore) return
+const loadOrders = async (pageToLoad: number) => {
+  if (loading || !hasMore) return
 
-    setLoading(true)
+  setLoading(true)
 
-    const requestId = ++requestIdRef.current
+  const requestId = ++requestIdRef.current
 
-    const data = await fetchOrders(page, search, statusFilter)
+  const data = await fetchOrders(pageToLoad, statusFilter)
 
-    if (requestId !== requestIdRef.current) return
+  if (requestId !== requestIdRef.current) return
 
-    if (data.length === 0) {
-      setHasMore(false)
-    } else {
-      setOrders(prev =>
-        page === 0 ? data : [...prev, ...data]
-      )
-      setPage(prev => prev + 1)
-    }
-
-    setLoading(false)
+  if (data.length === 0) {
+    setHasMore(false)
+  } else {
+    setOrders(prev =>
+      pageToLoad === 0 ? data : [...prev, ...data]
+    )
+    setPage(pageToLoad + 1)
   }
 
+  setLoading(false)
+}
 
-  // initial load
+  const filteredOrders = useMemo(() => {
+    return orders.filter(order =>
+      order.customer.toLowerCase().includes(search.toLowerCase())
+    )
+  }, [orders, search])
+  
   useEffect(() => {
-    loadOrders()
-  }, [])
+  loadOrders(0)
+}, [])
 
+  useEffect(() => {
+    requestIdRef.current++
+    setOrders([])
+    setPage(0)
+    setHasMore(true)
+
+    loadOrders(0)
+  }, [statusFilter])
+
+  
 
   // infinite scroll observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          loadOrders()
+          loadOrders(page)
         }
       },
       { threshold: 1 }
@@ -79,15 +94,8 @@ const OrdersTable = () => {
     return () => observer.disconnect()
   }, [loading, hasMore])
 
-  useEffect(() => {
-    requestIdRef.current++
-    setOrders([])
-    setPage(0)
-    setHasMore(true)
-    
-    loadOrders()
-  }, [search, statusFilter])
 
+  console.log("API status filter:", status)
 
   return (
     <div className="bg-slate-800 rounded-xl p-6">
@@ -104,13 +112,12 @@ const OrdersTable = () => {
 
           <select
             value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-slate-700 px-4 py-2 rounded-lg"
+            onChange={e => setStatusFilter(e.target.value as StatusFilter)}
           >
-            <option>All</option>
-            <option>Completed</option>
-            <option>Pending</option>
-            <option>Cancelled</option>
+            <option value="All">All</option>
+            <option value="Completed">Completed</option>
+            <option value="Pending">Pending</option>
+            <option value="Cancelled">Cancelled</option>
           </select>
         </div>
 
@@ -125,7 +132,7 @@ const OrdersTable = () => {
         </thead>
 
         <tbody>
-          {orders.map((order) => (
+          {filteredOrders.map(order => (
             <tr
               key={order.id}
               className="border-b border-slate-700 hover:bg-slate-700/40"

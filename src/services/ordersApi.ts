@@ -1,14 +1,11 @@
 import { supabase } from "./supabaseClient"
 
-const PAGE_SIZE = 10
-
-export const fetchOrders = async (
+export async function fetchOrders(
   page: number,
-  search?: string,
   status?: string
-) => {
-  const from = page * PAGE_SIZE
-  const to = from + PAGE_SIZE - 1
+) {
+  const from = page * 20
+  const to = from + 19
 
   let query = supabase
     .from("orders")
@@ -16,20 +13,13 @@ export const fetchOrders = async (
     .order("date", { ascending: false })
     .range(from, to)
 
-  if (search) {
-    query = query.ilike("customer", `%${search}%`)
-  }
-
-  if (status && status !== "All") {
+  
+  if (status !== "All") {
     query = query.eq("status", status)
   }
 
   const { data, error } = await query
 
-  if (error) {
-    console.error("Orders fetch error:", error)
-    return []
-  }
-
-  return data ?? []
+  if (error) throw error
+  return data
 }
