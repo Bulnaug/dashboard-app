@@ -16,21 +16,15 @@ export const fetchRevenueByMonth = async (): Promise<RevenueByMonth[]> => {
   return data ?? []
 }
 
-export interface UsersByPlan {
-  plan: string
-  count: number
+export async function fetchOrdersByStatus() {
+  const { data, error } = await supabase
+    .from("orders_by_status")
+    .select("*")
+
+  if (error) throw error
+  return data
 }
 
-export const fetchUsersByPlan = async (): Promise<UsersByPlan[]> => {
-  const { data, error } = await supabase.rpc("users_by_plan")
-
-  if (error) {
-    console.error("Users by plan error:", error)
-    return []
-  }
-
-  return data ?? []
-}
 
 export const getDashboardKPI = async () => {
   const [ordersResult, revenueResult, usersResult] = await Promise.all([

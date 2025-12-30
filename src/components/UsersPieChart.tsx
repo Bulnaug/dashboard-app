@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
-import { fetchUsersByPlan } from "../services/analyticsApi"
+import { fetchOrdersByStatus } from "../services/analyticsApi"
 
 
-const COLORS = ["#6366f1", "#22c55e", "#f97316"]
+const COLORS = {
+  Completed: "#4ade80",
+  Pending: "#facc15",
+  Cancelled: "#f87171",
+}
 
-const UsersPieChart = () => {
-  const [data, setData] = useState<
-    { plan: string; count: number }[]
-  >([])
+type OrdersByStatus = {
+  status: "Completed" | "Pending" | "Cancelled"
+  count: number
+}
+
+const OrdersByStatusPieChart = () => {
+  const [data, setData] = useState<OrdersByStatus[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-  fetchUsersByPlan()
+  fetchOrdersByStatus()
     .then((res) =>
-      setData(
-        res.map((item) => ({
-          plan: item.plan,
-          count: item.count,
-        }))
-      )
+      setData(res)
     )
     .finally(() => setLoading(false))
 }, [])
@@ -35,24 +37,22 @@ const UsersPieChart = () => {
 
   return (
     <div className="bg-slate-800 pb-[3.5rem] px-4 pt-6 rounded-xl h-[500px]">
-      <h3 className="text-lg font-semibold mb-4">Benutzer nach Plan</h3>
+      <h3 className="text-lg font-semibold mb-4">Bestellungen nach Status</h3>
 
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <Pie
-            data={data}
-            dataKey="count"
-            nameKey="plan"
-            outerRadius={100}
-            label
-          >
-            {data.map((_, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
-            ))}
-          </Pie>
+            <Pie
+              data={data}
+              dataKey="count"
+              nameKey="status"
+            >
+              {data.map(entry => (
+                <Cell
+                  key={entry.status}
+                  fill={COLORS[entry.status]}
+                />
+              ))}
+            </Pie>
           <Tooltip />
         </PieChart>
       </ResponsiveContainer>
@@ -60,4 +60,4 @@ const UsersPieChart = () => {
   )
 }
 
-export default UsersPieChart
+export default OrdersByStatusPieChart
