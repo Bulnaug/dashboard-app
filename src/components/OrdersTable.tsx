@@ -113,6 +113,7 @@ const loadOrders = async (pageToLoad: number) => {
           <select
             value={statusFilter}
             onChange={e => setStatusFilter(e.target.value as StatusFilter)}
+            className="bg-slate-700 px-4 py-2 rounded-lg"
           >
             <option value="All">All</option>
             <option value="Completed">Completed</option>
