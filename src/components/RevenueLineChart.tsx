@@ -22,14 +22,14 @@ const RevenueLineChart = () => {
 
   if (loading) {
     return (
-      <div className="bg-slate-800 p-6 rounded-xl h-[300px]">
+      <div className="bg-slate-800 p-6 rounded-xl h-[500px]">
         Loading revenue...
       </div>
     )
   }
 
   return (
-    <div className="bg-slate-800 p-6 rounded-xl h-[300px]">
+    <div className="bg-slate-800 pb-[2.5rem] px-4 pt-6 rounded-xl h-[500px]">
       <h3 className="text-lg font-semibold mb-4">Umsatzwachstum</h3>
 
       <ResponsiveContainer width="100%" height="100%">

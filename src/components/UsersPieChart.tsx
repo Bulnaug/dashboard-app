@@ -27,14 +27,14 @@ const UsersPieChart = () => {
 
   if (loading) {
     return (
-      <div className="bg-slate-800 p-6 rounded-xl h-[300px]">
+      <div className="bg-slate-800 p-6 rounded-xl h-[500px]">
         Loading users...
       </div>
     )
   }
 
   return (
-    <div className="bg-slate-800 p-6 rounded-xl h-[300px]">
+    <div className="bg-slate-800 pb-[3.5rem] px-4 pt-6 rounded-xl h-[500px]">
       <h3 className="text-lg font-semibold mb-4">Benutzer nach Plan</h3>
 
       <ResponsiveContainer width="100%" height="100%">
